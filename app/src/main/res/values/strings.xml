@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Event Attendance</string>
+    <string name="title_dashboard">Scan Event Participant</string>
+</resources>

@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "293739762250",
+    "firebase_url": "https://event-attendance-fa1fc.firebaseio.com",
+    "project_id": "event-attendance-fa1fc",
+    "storage_bucket": "event-attendance-fa1fc.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:293739762250:android:70ae44bfea21c9ed",
+        "android_client_info": {
+          "package_name": "com.example.ahmaadyunus.eventattendance"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "293739762250-6o8rtu7ef5buc0g8n5tg79qg4veo2l9t.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.ahmaadyunus.eventattendance",
+            "certificate_hash": "AA574151ED445CD3B43C5C61D6E631EC9761827A"
+          }
+        },
+        {
+          "client_id": "293739762250-robn40dqb3ua8qkccl3c2hfgvhs5kl0e.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAYBjZF7NudVRMOtl1IAeEzptIyg5UrrfM"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "293739762250-robn40dqb3ua8qkccl3c2hfgvhs5kl0e.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
