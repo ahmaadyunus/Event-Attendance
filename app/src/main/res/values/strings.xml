@@ -1,4 +1,17 @@
 <resources>
     <string name="app_name">Event Attendance</string>
-    <string name="title_dashboard">Scan Event Participant</string>
+    <string name="title_dashboard">Scan Event Guest</string>
+    <string name="name">Name</string>
+    <string name="no_ktp">No. KTP</string>
+    <string name="address">Address</string>
+    <string name="email">Email</string>
+    <string name="mobile">Mobile</string>
+    <string name="participant">Guest</string>
+    <string name="participant_notfound">Guest Not Found</string>
+    <string name="message_not_found">Sorry, guest not registered !</string>
+    <string name="searching">Searching</string>
+    <string name="please_wait">Please wait ...</string>
+    <string name="confirm">Confirm</string>
+    <string name="cancel">Cancel</string>
+    <string name="ok">OK</string>
 </resources>

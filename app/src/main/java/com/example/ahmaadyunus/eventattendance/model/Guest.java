@@ -4,7 +4,7 @@ package com.example.ahmaadyunus.eventattendance.model;
  * Created by ahmaadyunus on 30/12/16.
  */
 
-public class Participant {
+public class Guest {
 
 
     private String id;
@@ -14,8 +14,19 @@ public class Participant {
     private String address;
     private String email;
     private String profile_pict;
+    private String status;
 
-    public Participant () {
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+
+
+    public Guest() {
 
     }
     public String getId() {

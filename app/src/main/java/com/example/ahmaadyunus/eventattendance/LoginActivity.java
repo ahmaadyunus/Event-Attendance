@@ -28,6 +28,8 @@ public class LoginActivity extends AppCompatActivity  implements GoogleApiClient
     private FirebaseAuth firebaseAuth;
     private static final int REQCODE_SIGN_IN = 0;
     private FirebaseAuth.AuthStateListener authStateListener;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
