@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">Event Attendance</string>
-    <string name="title_dashboard">Scan Event Guest</string>
     <string name="name">Name</string>
     <string name="no_ktp">No. KTP</string>
     <string name="address">Address</string>
@@ -14,4 +13,13 @@
     <string name="confirm">Confirm</string>
     <string name="cancel">Cancel</string>
     <string name="ok">OK</string>
+    <string name="invited">Invited</string>
+    <string name="arrived">Arrived</string>
+    <string name="Home">Home</string>
+    <string name="guest_list">Guest List</string>
+    <string name="about">About</string>
+    <string name="more">More</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

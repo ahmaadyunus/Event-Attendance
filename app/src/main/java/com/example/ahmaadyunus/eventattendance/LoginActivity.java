@@ -1,9 +1,12 @@
 package com.example.ahmaadyunus.eventattendance;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import com.google.android.gms.auth.api.Auth;
@@ -12,6 +15,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.SignInButton;
+import com.google.android.gms.common.api.GoogleApiActivity;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -30,17 +34,24 @@ public class LoginActivity extends AppCompatActivity  implements GoogleApiClient
     private FirebaseAuth.AuthStateListener authStateListener;
 
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_login);
         firebaseAuth = FirebaseAuth.getInstance();
+
         authStateListener = new FirebaseAuth.AuthStateListener() {
 
             @Override public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
 
                 if (user != null) {
+
+                    startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                    finish();
                     // user has signed
                 } else {
                     // user has logout
@@ -48,6 +59,7 @@ public class LoginActivity extends AppCompatActivity  implements GoogleApiClient
             }
         };
         setupGoogleApi();
+
         signInButton = (SignInButton) findViewById(R.id.btn_login);
 
         signInButton.setOnClickListener(new View.OnClickListener() {
@@ -79,9 +91,9 @@ public class LoginActivity extends AppCompatActivity  implements GoogleApiClient
             if (result.isSuccess()) {
                 // user success login, get account data
                 GoogleSignInAccount account = result.getSignInAccount();
+
                 loginWithFirebase(account);
-                startActivity(new Intent(this, MainActivity
-                        .class));
+                startActivity(new Intent(this, MainActivity.class));
 
             } else {
                 // user failed login
