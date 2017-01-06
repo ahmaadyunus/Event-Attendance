@@ -36,7 +36,7 @@ import com.google.zxing.Result;
 
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
 
-public class BaseActivity extends AppCompatActivity {
+public class BaseActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener{
 
     DrawerLayout drawerLayout;
     BottomNavigationView mBottomNav;
@@ -50,33 +50,15 @@ public class BaseActivity extends AppCompatActivity {
         Firebase.setAndroidContext(this);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
         mBottomNav = (BottomNavigationView) findViewById(R.id.navigation);
-        setupDrawerContent(mBottomNav);
-        checkPermission();
-        if (isLaunch) {
-            selectDrawerItem(R.id.nav_home);
-            isLaunch = false;
-        }
-
+        mBottomNav.setOnNavigationItemSelectedListener(this);
     }
-
     @Override
-    protected void onStart() {
-        super.onStart();
-        selectDrawerItem(R.id.nav_home);
-    }
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
 
-    private void setupDrawerContent(BottomNavigationView bottomNavigationView) {
-        bottomNavigationView.setOnNavigationItemSelectedListener(
-                new BottomNavigationView.OnNavigationItemSelectedListener() {
-                    @Override
-                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                        int id = item.getItemId();
+        selectDrawerItem(id);
+        return true;
 
-                        selectDrawerItem(id);
-                        return true;
-
-                    }
-                });
     }
 
     public void selectDrawerItem(int id) {
@@ -108,59 +90,5 @@ public class BaseActivity extends AppCompatActivity {
 
 
     }
-
-    public void checkPermission() {
-        int permissionCheck = ContextCompat.checkSelfPermission(BaseActivity.this,
-                android.Manifest.permission.CAMERA);
-
-        if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
-
-            // Should we show an explanation?
-            if (ActivityCompat.shouldShowRequestPermissionRationale(BaseActivity.this,
-                    android.Manifest.permission.CAMERA)) {
-
-                // Show an explanation to the user *asynchronously* -- don't block
-                // this thread waiting for the user's response! After the user
-                // sees the explanation, try again to request the permission.
-
-            } else {
-
-                // No explanation needed, we can request the permission.
-
-                ActivityCompat.requestPermissions(BaseActivity.this,
-                        new String[]{android.Manifest.permission.CAMERA}, 1);
-
-                // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
-                // app-defined int constant. The callback method gets the
-                // result of the request.
-            }
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           String permissions[], int[] grantResults) {
-        switch (requestCode) {
-            case 1: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
-                    // permission was granted, yay! Do the
-                    // contacts-related task you need to do.
-
-                } else {
-
-                    // permission denied, boo! Disable the
-                    // functionality that depends on this permission.
-                }
-                return;
-            }
-
-            // other 'case' lines to check for other
-            // permissions this app might request
-        }
-    }
-
 
 }
