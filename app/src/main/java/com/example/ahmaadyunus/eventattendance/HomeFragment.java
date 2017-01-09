@@ -1,102 +1,105 @@
 package com.example.ahmaadyunus.eventattendance;
 
-import android.*;
-import android.Manifest;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.nfc.Tag;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.ahmaadyunus.eventattendance.config.Config;
 import com.example.ahmaadyunus.eventattendance.model.Guest;
-import com.firebase.client.AuthData;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.zxing.Result;
 
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
 
-public class MainActivity extends AppCompatActivity implements ZXingScannerView.ResultHandler {
+
+/**
+ * A simple {@link Fragment} subclass.
+ * Activities that contain this fragment must implement the
+ * {@link HomeFragment.OnFragmentInteractionListener} interface
+ * to handle interaction events.
+ * Use the {@link HomeFragment#newInstance} factory method to
+ * create an instance of this fragment.
+ */
+public class HomeFragment extends Fragment implements ZXingScannerView.ResultHandler{
+    // TODO: Rename parameter arguments, choose names that match
+    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+    private static final String ARG_PARAM1 = "param1";
+    private static final String ARG_PARAM2 = "param2";
 
     private ZXingScannerView mScannerView;
-    private FirebaseAuth firebaseAuth;
-
-    private FirebaseAuth.AuthStateListener authStateListener;
     Button scan,signout_btn;
-
     TextView name_TV,noktp_TV,address_TV,email_TV,mobile_TV, invited_TV,arrived_TV;
+    View view;
+    Toolbar toolbar;
 
+    // TODO: Rename and change types of parameters
+    private String mParam1;
+    private String mParam2;
+
+    private OnFragmentInteractionListener mListener;
+
+    public HomeFragment() {
+        // Required empty public constructor
+    }
+
+    /**
+     * Use this factory method to create a new instance of
+     * this fragment using the provided parameters.
+     *
+     * @param param1 Parameter 1.
+     * @param param2 Parameter 2.
+     * @return A new instance of fragment HomeFragment.
+     */
+    // TODO: Rename and change types and number of parameters
+    public static HomeFragment newInstance(String param1, String param2) {
+        HomeFragment fragment = new HomeFragment();
+        Bundle args = new Bundle();
+        args.putString(ARG_PARAM1, param1);
+        args.putString(ARG_PARAM2, param2);
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-       // drawerLayout.addView(contentView,0);
-        Firebase.setAndroidContext(this);
-
-        checkPermission();
-        //setValue();
-        scan = (Button)findViewById(R.id.scan_btn);
-        scan.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Scan();
-            }
-        });
-
-    }
-
-
-
-    public void Scan (){
-        try {
-            mScannerView = new ZXingScannerView(this);   // Programmatically initialize the scanner view
-            setContentView(mScannerView);
-
-            mScannerView.setResultHandler(this); // Register ourselves as a handler for scan results.
-            mScannerView.startCamera();         // Start camera
-        }catch (Exception e){
-
+        if (getArguments() != null) {
+            mParam1 = getArguments().getString(ARG_PARAM1);
+            mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
     }
-
-
 
     @Override
-    protected void onPause() {
-        try {
-            super.onPause();
-            mScannerView.stopCamera();
-        }catch (Exception e){
-
-        }
+    public void onResume() {
+        super.onResume();
+        mScannerView.setResultHandler(this);
+        mScannerView.startCamera();
     }
-
-
     @Override
     public void handleResult(Result result) {
         if(result!=null) {
             try {
                 mScannerView.stopCamera();
-                final ProgressDialog progress_dialog = new ProgressDialog(MainActivity.this);
+                final ProgressDialog progress_dialog = new ProgressDialog(getActivity());
                 progress_dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
                 progress_dialog.setTitle(R.string.searching);
                 progress_dialog.setCancelable(false);
@@ -128,9 +131,9 @@ public class MainActivity extends AppCompatActivity implements ZXingScannerView.
                                 final Guest guest = postSnapshot.getValue(Guest.class);
                                 //Adding it to a string
 
-                                LayoutInflater inflater = getLayoutInflater();
+                                LayoutInflater inflater = getLayoutInflater(Bundle.EMPTY);
                                 View dialoglayout = inflater.inflate(R.layout.result_found, null);
-                                AlertDialog.Builder alert1 = new AlertDialog.Builder(MainActivity.this);
+                                AlertDialog.Builder alert1 = new AlertDialog.Builder(getActivity());
                                 name_TV = (TextView) dialoglayout.findViewById(R.id.name_participant_TV);
                                 noktp_TV = (TextView) dialoglayout.findViewById(R.id.noktp_participant_TV);
                                 address_TV = (TextView) dialoglayout.findViewById(R.id.address_participant_TV);
@@ -145,7 +148,6 @@ public class MainActivity extends AppCompatActivity implements ZXingScannerView.
 
                                 alert1.setTitle(R.string.participant);
                                 alert1.setView(dialoglayout);
-                                setContentView(R.layout.activity_main);
                                 alert1.setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
@@ -159,11 +161,10 @@ public class MainActivity extends AppCompatActivity implements ZXingScannerView.
                             }
                         } else {
                             progress_dialog.hide();
-                            setContentView(R.layout.activity_main);
-                            final AlertDialog.Builder alert2 = new AlertDialog.Builder(MainActivity.this);
+                            final AlertDialog.Builder alert2 = new AlertDialog.Builder(getActivity());
                             alert2.setTitle(R.string.participant_notfound);
                             alert2.setMessage(R.string.message_not_found);
-                            setContentView(R.layout.activity_main);
+
                             alert2.setNegativeButton("try again", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
@@ -183,47 +184,74 @@ public class MainActivity extends AppCompatActivity implements ZXingScannerView.
 
             }
         }else{
-            Intent getMainScreen = new Intent(this, MainActivity.class);//pentru test, de sters
-            startActivity(getMainScreen);
+
+            return;
 
         }
-
-
-        // show the scanner result into dialog box.
-
     }
-    public void checkPermission(){
-        int permissionCheck = ContextCompat.checkSelfPermission(MainActivity.this,
-                Manifest.permission.CAMERA);
 
-        if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
 
-            // Should we show an explanation?
-            if (ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this,
-                    Manifest.permission.CAMERA)) {
+        @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+            setValue();
+            view = inflater.inflate(R.layout.fragment_home, container, false);
+            mScannerView = new ZXingScannerView(getActivity());
+            scan = (Button)view.findViewById(R.id.scan_btn);
+            invited_TV = (TextView) view.findViewById(R.id.invited_num_TV);
+            arrived_TV = (TextView) view.findViewById(R.id.arrived_num_TV);
+            scan.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Scan();
+                }
+            });
+        // Inflate the layout for this fragment
+        return view;
+    }
 
-                // Show an explanation to the user *asynchronously* -- don't block
-                // this thread waiting for the user's response! After the user
-                // sees the explanation, try again to request the permission.
-
-            } else {
-
-                // No explanation needed, we can request the permission.
-
-                ActivityCompat.requestPermissions(MainActivity.this,
-                        new String[]{Manifest.permission.CAMERA},1);
-
-                // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
-                // app-defined int constant. The callback method gets the
-                // result of the request.
-            }
+    // TODO: Rename method, update argument and hook method into UI event
+    public void onButtonPressed(Uri uri) {
+        if (mListener != null) {
+            mListener.onFragmentInteraction(uri);
         }
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof OnFragmentInteractionListener) {
+            mListener = (OnFragmentInteractionListener) context;
+        } else {
+//            throw new RuntimeException(context.toString()
+  //                  + " must implement OnFragmentInteractionListener");
+        }
+        setValue();
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mListener = null;
+    }
+
+    /**
+     * This interface must be implemented by activities that contain this
+     * fragment to allow an interaction in this fragment to be communicated
+     * to the activity and potentially other fragments contained in that
+     * activity.
+     * <p>
+     * See the Android Training lesson <a href=
+     * "http://developer.android.com/training/basics/fragments/communicating.html"
+     * >Communicating with Other Fragments</a> for more information.
+     */
+    public interface OnFragmentInteractionListener {
+        // TODO: Update argument type and name
+        void onFragmentInteraction(Uri uri);
     }
     public void setValue(){
         try{
             Firebase ref = new Firebase(Config.FIREBASE_URL);
-            invited_TV = (TextView) findViewById(R.id.invited_num_TV);
-            arrived_TV = (TextView) findViewById(R.id.arrived_num_TV);
             ref.child("first_event").child("participant").orderByChild("status").equalTo("invited").addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot snapshot) {
@@ -254,33 +282,14 @@ public class MainActivity extends AppCompatActivity implements ZXingScannerView.
 
         }
     }
-    @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           String permissions[], int[] grantResults) {
-        switch (requestCode) {
-            case 1: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+    public void Scan (){
+        try {   // Programmatically initialize the scanner view
+            getActivity().setContentView(mScannerView);
 
-                    // permission was granted, yay! Do the
-                    // contacts-related task you need to do.
+            mScannerView.setResultHandler(this); // Register ourselves as a handler for scan results.
+            mScannerView.startCamera();         // Start camera
+        }catch (Exception e){
 
-                } else {
-
-                    // permission denied, boo! Disable the
-                    // functionality that depends on this permission.
-                }
-                return;
-            }
-
-            // other 'case' lines to check for other
-            // permissions this app might request
         }
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
     }
 }
